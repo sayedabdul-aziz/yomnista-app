@@ -1,5 +1,7 @@
 import 'package:borcelle_restaurant/core/utils/app_colors.dart';
 import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
+import 'package:borcelle_restaurant/feature/customer/home/favourite_view.dart';
+import 'package:borcelle_restaurant/feature/customer/home/search_view.dart';
 import 'package:borcelle_restaurant/feature/customer/menu/menu_view.dart';
 import 'package:borcelle_restaurant/feature/customer/menu/offer_view.dart';
 import 'package:borcelle_restaurant/feature/customer/menu/sales_view.dart';
@@ -13,8 +15,6 @@ class CustomerHomeView extends StatefulWidget {
 }
 
 class _CustomerHomeViewState extends State<CustomerHomeView> {
-
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +24,13 @@ class _CustomerHomeViewState extends State<CustomerHomeView> {
         title: Row(
           children: [
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CustomerFavouriteView(),
+                      ));
+                },
                 icon: Icon(
                   Icons.favorite,
                   color: AppColors.color1,
@@ -32,6 +38,14 @@ class _CustomerHomeViewState extends State<CustomerHomeView> {
                 )),
             Expanded(
                 child: TextFormField(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SearchView(),
+                    ));
+              },
+              readOnly: true,
               decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.search),
                   hintText: 'Search ..',
@@ -43,7 +57,24 @@ class _CustomerHomeViewState extends State<CustomerHomeView> {
                       borderRadius: BorderRadius.circular(25))),
             )),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  // FirebaseFirestore.instance
+                  //     .collection('menu-list')
+                  //     .doc('Margherita')
+                  //     .set({
+                  //   'id': 'Margherita',
+                  //   'name': 'Margherita',
+                  //   'image': null,
+                  //   'category': 'Pizza',
+                  //   'description': 'Pizza Sauce & Mozzarella',
+                  //   'price': 250,
+                  //   'is_offer': false,
+                  //   'offer_persent': 0,
+                  //   'rate': 4,
+                  //   'rate_num': 0,
+                  //   'rate_sum': 4,
+                  // }, SetOptions(merge: true));
+                },
                 icon: Icon(
                   Icons.filter_list_rounded,
                   color: AppColors.color1,

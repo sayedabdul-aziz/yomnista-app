@@ -11,108 +11,76 @@ class AuthCubit extends Cubit<AuthStates> {
     try {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      emit(AuthSuccessState());
+      if (credential.user!.photoURL != null) {
+        String role = credential.user!.photoURL!;
+        emit(AuthSuccessState(role: role));
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        emit(AuthFailureState(error: 'لا يوجد حساب علي هذا الايميل'));
+        emit(AuthFailureState(error: 'Email is not exist.'));
       } else if (e.code == 'wrong-password') {
-        emit(AuthFailureState(error: 'كلمة السر التي ادخلتها غير صحيحة'));
+        emit(AuthFailureState(error: 'Wrong password, try again!'));
       } else {
-        emit(AuthFailureState(error: 'حدثت مشكلة في تسجيل الدخول حاول لاحقاً'));
+        emit(AuthFailureState(error: 'Faild to sign in, try again!'));
       }
     }
   }
 
-  registerPatient(String name, String email, String password) async {
+  register(String fname, String lname, String username, String email, int role,
+      String password) async {
     emit(AuthLoadingState());
     try {
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       User user = credential.user!;
-      await user.updateDisplayName(name);
+      await user.updateDisplayName('$fname $lname');
+      if (role == 0) {
+        await user.updatePhotoURL('0');
 
-      FirebaseFirestore.instance.collection('patients').doc(user.uid).set({
-        'name': name,
-        'image': null,
-        'age': null,
-        'email': email,
-        'phone': null,
-        'bio': null,
-        'city': null,
-      }, SetOptions(merge: true));
-      emit(AuthSuccessState());
+        FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'fname': fname,
+          'lname': lname,
+          'image': null,
+          'username': username,
+          'email': email,
+          'role': 'Customer',
+        }, SetOptions(merge: true));
+      } else if (role == 1) {
+        await user.updatePhotoURL('1');
+
+        FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'fname': fname,
+          'lname': lname,
+          'image': null,
+          'username': username,
+          'email': email,
+          'role': 'Manager',
+        }, SetOptions(merge: true));
+      } else {
+        await user.updatePhotoURL('2');
+
+        FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'fname': fname,
+          'lname': lname,
+          'image': null,
+          'username': username,
+          'email': email,
+          'role': 'Admin',
+        }, SetOptions(merge: true));
+      }
+
+      if (credential.user!.photoURL != null) {
+        String role = credential.user!.photoURL!;
+        emit(AuthSuccessState(role: role));
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        emit(AuthFailureState(error: 'يوجد حساب بالفعل علي هذا الايميل'));
+        emit(AuthFailureState(error: 'Email is already exist!'));
       } else if (e.code == 'weak-password') {
-        emit(AuthFailureState(error: 'كلمة السر التي ادخلتها ضعيفة جدا'));
+        emit(AuthFailureState(error: 'Weak password, please re-write agin!'));
       } else {
         emit(AuthFailureState(error: e.toString()));
       }
-    }
-  }
-
-  registerDoctor(String name, String email, String password) async {
-    emit(AuthLoadingState());
-    try {
-      final credential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-      User user = credential.user!;
-
-      await user.updateDisplayName(name);
-
-      FirebaseFirestore.instance.collection('doctors').doc(user.uid).set({
-        'name': name,
-        'image': null,
-        'specialization': null,
-        'rating': null,
-        'email': user.email,
-        'phone1': null,
-        'phone2': null,
-        'bio': null,
-        'openHour': null,
-        'closeHour': null,
-        'address': null,
-      }, SetOptions(merge: true));
-      emit(AuthSuccessState());
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
-        emit(AuthFailureState(error: 'يوجد حساب بالفعل علي هذا الايميل'));
-      } else if (e.code == 'weak-password') {
-        emit(AuthFailureState(error: 'كلمة السر التي ادخلتها ضعيفة جدا'));
-      } else {
-        emit(AuthFailureState(error: e.toString()));
-      }
-    }
-  }
-
-  updateDoctorData(
-      {required String uid,
-      required String specialization,
-      required String image,
-      required String email,
-      required String phone1,
-      String? phone2,
-      required String bio,
-      required String startTime,
-      required String endTime,
-      required String address}) async {
-    emit(UpdateLoadingState());
-    try {
-      FirebaseFirestore.instance.collection('doctors').doc(uid).set({
-        'image': image,
-        'specialization': specialization,
-        'rating': 3,
-        'phone1': phone1,
-        'phone2': phone2,
-        'bio': bio,
-        'openHour': startTime,
-        'closeHour': endTime,
-        'address': address,
-      }, SetOptions(merge: true));
-      emit(UpdateSucessState());
-    } catch (e) {
-      emit(UpdateErrorState(error: e.toString()));
     }
   }
 }

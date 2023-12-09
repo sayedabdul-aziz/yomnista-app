@@ -54,8 +54,8 @@ showLoaderDialog(BuildContext context) {
               color: AppColors.color1,
             ),
             Container(
-                margin: const EdgeInsets.only(right: 15),
-                child: const Text("جاري التحميل ...")),
+                margin: const EdgeInsets.only(left: 15),
+                child: const Text("Loading...")),
           ],
         ),
       );

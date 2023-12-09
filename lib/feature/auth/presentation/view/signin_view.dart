@@ -2,6 +2,7 @@ import 'package:borcelle_restaurant/core/functions/email_validate.dart';
 import 'package:borcelle_restaurant/core/utils/app_colors.dart';
 import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
 import 'package:borcelle_restaurant/core/widgets/custom_button.dart';
+import 'package:borcelle_restaurant/core/widgets/custom_error.dart';
 import 'package:borcelle_restaurant/core/widgets/custom_loading.dart';
 import 'package:borcelle_restaurant/feature/auth/presentation/view/forget_password.dart';
 import 'package:borcelle_restaurant/feature/auth/presentation/view/register_view.dart';
@@ -33,24 +34,31 @@ class _LoginViewState extends State<LoginView> {
     return BlocListener<AuthCubit, AuthStates>(
       listener: (context, state) {
         if (state is AuthSuccessState) {
-          // if (widget.index == 0) {
-          //   Navigator.of(context).pushAndRemoveUntil(
-          //     MaterialPageRoute(
-          //       builder: (context) => const DoctorMainPage(),
-          //     ),
-          //     (route) => false,
-          //   );
-          // } else {
-          //   Navigator.of(context).pushAndRemoveUntil(
-          //     MaterialPageRoute(
-          //       builder: (context) => const PatientMainPage(),
-          //     ),
-          //     (route) => false,
-          //   );
-          // }
+          if (state.role == '0') {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const CustomerNavBarView(),
+              ),
+              (route) => false,
+            );
+          } else if (state.role == '1') {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const CustomerNavBarView(),
+              ),
+              (route) => false,
+            );
+          } else {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const CustomerNavBarView(),
+              ),
+              (route) => false,
+            );
+          }
         } else if (state is AuthFailureState) {
-          // Navigator.of(context).pop();
-          // showErrorDialog(context, state.error);
+          Navigator.of(context).pop();
+          showErrorDialog(context, state.error);
         } else {
           showLoaderDialog(context);
         }
@@ -78,7 +86,6 @@ class _LoginViewState extends State<LoginView> {
                   TextFormField(
                     keyboardType: TextInputType.emailAddress,
                     controller: _emailController,
-                    textAlign: TextAlign.end,
                     textInputAction: TextInputAction.next,
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -140,17 +147,11 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   CustomButton(
                       text: 'Sign in',
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CustomerNavBarView(),
-                            ));
-                        // if (_formKey.currentState!.validate()) {
-                        //   await context.read<AuthCubit>().login(
-                        //       _emailController.text,
-                        //       _passwordController.text);
-                        // }
+                      onTap: () async {
+                        if (_formKey.currentState!.validate()) {
+                          await context.read<AuthCubit>().login(
+                              _emailController.text, _passwordController.text);
+                        }
                       }),
                   const SizedBox(
                     height: 15,

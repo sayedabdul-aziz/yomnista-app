@@ -2,16 +2,24 @@ import 'package:borcelle_restaurant/core/utils/app_colors.dart';
 import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
 import 'package:borcelle_restaurant/feature/auth/presentation/view_model/auth_cubit.dart';
 import 'package:borcelle_restaurant/feature/splash_view.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: AppColors.scaffoldBG,
     statusBarIconBrightness: Brightness.dark,
   ));
+  await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: 'AIzaSyCSEBjGvGkvbSCeiSwmR-X7-L9h2BVC678',
+          appId: 'com.example.restaurant_app',
+          messagingSenderId: '768932994403',
+          projectId: 'restaurant-app-12-2023'));
   runApp(const MainApp());
 }
 

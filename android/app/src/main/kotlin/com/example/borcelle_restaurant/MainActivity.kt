@@ -1,4 +1,4 @@
-package com.example.borcelle_restaurant
+package com.example.restaurant_app
 
 import io.flutter.embedding.android.FlutterActivity
 

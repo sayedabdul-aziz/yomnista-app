@@ -1,20 +1,20 @@
 import 'package:borcelle_restaurant/core/utils/app_colors.dart';
-import 'package:borcelle_restaurant/feature/customer/cart/cart_view.dart';
-import 'package:borcelle_restaurant/feature/customer/home/home_view.dart';
+import 'package:borcelle_restaurant/feature/admin/salary/salary_view.dart';
 import 'package:borcelle_restaurant/feature/customer/profile/profile_view.dart';
+import 'package:borcelle_restaurant/feature/manager/home/home_view.dart';
 import 'package:flutter/material.dart';
 
-class CustomerNavBarView extends StatefulWidget {
-  const CustomerNavBarView({super.key});
+class ManagerNavBarView extends StatefulWidget {
+  const ManagerNavBarView({super.key});
 
   @override
-  State<CustomerNavBarView> createState() => _CustomerNavBarViewState();
+  State<ManagerNavBarView> createState() => _ManagerNavBarViewState();
 }
 
-class _CustomerNavBarViewState extends State<CustomerNavBarView> {
+class _ManagerNavBarViewState extends State<ManagerNavBarView> {
   List<Widget> views = [
-    const CustomerHomeView(),
-    const CustomerCartView(),
+    const ManagerHomeView(),
+    const AdminSalaryView(),
     const ProfileView()
   ];
   int _selectedItem = 0;

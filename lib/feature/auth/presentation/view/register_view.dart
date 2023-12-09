@@ -7,6 +7,7 @@ import 'package:borcelle_restaurant/core/widgets/custom_loading.dart';
 import 'package:borcelle_restaurant/feature/auth/presentation/view/signin_view.dart';
 import 'package:borcelle_restaurant/feature/auth/presentation/view_model/auth_cubit.dart';
 import 'package:borcelle_restaurant/feature/auth/presentation/view_model/auth_states.dart';
+import 'package:borcelle_restaurant/feature/customer/home/nav_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,21 +36,28 @@ class _RegisterViewState extends State<RegisterView> {
     return BlocListener<AuthCubit, AuthStates>(
       listener: (context, state) {
         if (state is AuthSuccessState) {
-          // if (widget.index == 0) {
-          //   Navigator.of(context).pushAndRemoveUntil(
-          //     MaterialPageRoute(
-          //       builder: (context) => const DoctorUploadData(),
-          //     ),
-          //     (route) => false,
-          //   );
-          // } else {
-          //   Navigator.of(context).pushAndRemoveUntil(
-          //     MaterialPageRoute(
-          //       builder: (context) => const PatientMainPage(),
-          //     ),
-          //     (route) => false,
-          //   );
-          // }
+          if (state.role == '0') {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const CustomerNavBarView(),
+              ),
+              (route) => false,
+            );
+          } else if (state.role == '1') {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const CustomerNavBarView(),
+              ),
+              (route) => false,
+            );
+          } else {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const CustomerNavBarView(),
+              ),
+              (route) => false,
+            );
+          }
         } else if (state is AuthFailureState) {
           Navigator.of(context).pop();
           showErrorDialog(context, state.error);
@@ -81,7 +89,6 @@ class _RegisterViewState extends State<RegisterView> {
                       TextFormField(
                           keyboardType: TextInputType.emailAddress,
                           controller: _fName,
-                          textAlign: TextAlign.end,
                           textInputAction: TextInputAction.next,
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -101,7 +108,6 @@ class _RegisterViewState extends State<RegisterView> {
                       TextFormField(
                           keyboardType: TextInputType.emailAddress,
                           controller: _lName,
-                          textAlign: TextAlign.end,
                           textInputAction: TextInputAction.next,
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -121,7 +127,6 @@ class _RegisterViewState extends State<RegisterView> {
                       TextFormField(
                           keyboardType: TextInputType.emailAddress,
                           controller: _userName,
-                          textAlign: TextAlign.end,
                           textInputAction: TextInputAction.next,
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -141,7 +146,6 @@ class _RegisterViewState extends State<RegisterView> {
                       TextFormField(
                         keyboardType: TextInputType.emailAddress,
                         controller: _emailController,
-                        textAlign: TextAlign.end,
                         textInputAction: TextInputAction.next,
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -298,12 +302,16 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                       CustomButton(
                           text: 'Sign Up',
-                          onTap: () {
-                            // if (_formKey.currentState!.validate()) {
-                            //   await context.read<AuthCubit>().login(
-                            //       _emailController.text,
-                            //       _passwordController.text);
-                            // }
+                          onTap: () async {
+                            if (_formKey.currentState!.validate()) {
+                              await context.read<AuthCubit>().register(
+                                  _fName.text,
+                                  _lName.text,
+                                  _userName.text,
+                                  _emailController.text,
+                                  roleIndex,
+                                  _passwordController.text);
+                            }
                           }),
                       const SizedBox(
                         height: 15,

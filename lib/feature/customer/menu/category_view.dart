@@ -4,14 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class CustomerSalesView extends StatefulWidget {
-  const CustomerSalesView({super.key});
-
+class CategoryMenuView extends StatefulWidget {
+  const CategoryMenuView({super.key, required this.category});
+  final String category;
   @override
-  State<CustomerSalesView> createState() => _CustomerSalesViewState();
+  State<CategoryMenuView> createState() => _CategoryMenuViewState();
 }
 
-class _CustomerSalesViewState extends State<CustomerSalesView> {
+class _CategoryMenuViewState extends State<CategoryMenuView> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   User? user;
@@ -30,13 +30,13 @@ class _CustomerSalesViewState extends State<CustomerSalesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SALES'),
+        title: Text(widget.category),
         leading: const CustomBackAction(),
       ),
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('menu-list')
-              .where('is_offer', isEqualTo: true)
+              .where('category', isEqualTo: widget.category)
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {

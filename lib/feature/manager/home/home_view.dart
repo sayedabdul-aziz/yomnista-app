@@ -1,17 +1,24 @@
 import 'package:borcelle_restaurant/core/utils/app_colors.dart';
 import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
+import 'package:borcelle_restaurant/feature/manager/wallet/wallet_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ManagerWalletView extends StatelessWidget {
-  const ManagerWalletView({super.key});
+class ManagerHomeView extends StatefulWidget {
+  const ManagerHomeView({super.key});
 
+  @override
+  State<ManagerHomeView> createState() => _ManagerHomeViewState();
+}
+
+class _ManagerHomeViewState extends State<ManagerHomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Wallet'),
+        title: const Text('Orders'),
       ),
       body: Padding(
           padding: const EdgeInsets.all(10),
@@ -164,39 +171,30 @@ class OrderCartWidget extends StatelessWidget {
       ),
     );
   }
-}
 
-class DolDurmaClipper extends CustomClipper<Path> {
-  DolDurmaClipper({required this.right, required this.holeRadius});
-
-  final double right;
-  final double holeRadius;
-
-  @override
-  Path getClip(Size size) {
-    final path = Path()
-      ..moveTo(0, 0)
-      ..lineTo(size.width - right - holeRadius, 0.0)
-      ..arcToPoint(
-        Offset(size.width - right, 0),
-        clockwise: false,
-        radius: const Radius.circular(1),
-      )
-      ..lineTo(size.width, 0.0)
-      ..lineTo(size.width, size.height)
-      ..lineTo(size.width - right, size.height)
-      ..arcToPoint(
-        Offset(size.width - right - holeRadius, size.height),
-        clockwise: false,
-        radius: const Radius.circular(1),
-      );
-
-    path.lineTo(0.0, size.height);
-
-    path.close();
-    return path;
+  addToMenu({
+    required String pName,
+    required String pImage,
+    required String category,
+    required String description,
+    required double price,
+    required double offerPersent,
+    required String date,
+    required String name,
+    required String image,
+  }) {
+    FirebaseFirestore.instance.collection('menu-list').doc(pName).set({
+      'id': pName,
+      'name': pName,
+      'image': image,
+      'category': category,
+      'description': description,
+      'price': price,
+      'is_offer': offerPersent != 0 ? true : false,
+      'offer_persent': offerPersent,
+      'rate': 4,
+      'rate_num': 0,
+      'rate_sum': 4,
+    }, SetOptions(merge: true));
   }
-
-  @override
-  bool shouldReclip(DolDurmaClipper oldClipper) => true;
 }
