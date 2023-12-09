@@ -33,17 +33,21 @@ class _CustomerOfferViewState extends State<CustomerOfferView> {
         title: const Text('OFFERS'),
         leading: const CustomBackAction(),
       ),
-      body: StreamBuilder(
-          stream:
-              FirebaseFirestore.instance.collection('offers-list').snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return MenuListItems(data: snapshot.data!);
-          }),
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('offers-list')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return MenuListItems(data: snapshot.data!);
+            }),
+      ),
     );
   }
 }

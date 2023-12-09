@@ -2,6 +2,7 @@ import 'package:borcelle_restaurant/core/utils/app_colors.dart';
 import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
 import 'package:borcelle_restaurant/core/widgets/custom_back_action.dart';
 import 'package:borcelle_restaurant/core/widgets/custom_button.dart';
+import 'package:borcelle_restaurant/core/widgets/custom_error.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
     _getUser();
   }
 
-  int counter = 1;
+  int quantity = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,15 +63,19 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(25),
                           color: AppColors.color2),
                       child: Stack(
                         alignment: Alignment.topRight,
                         children: [
-                          Image.asset(
-                            itemData!['image'],
-                            height: 250,
-                            width: double.infinity,
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(25),
+                            child: Image.network(
+                              itemData!['image'],
+                              height: 250,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
                           ),
                           IconButton(
                             onPressed: () {},
@@ -123,7 +128,7 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
                                 elevation: .7,
                                 onPressed: () {
                                   setState(() {
-                                    counter--;
+                                    quantity--;
                                   });
                                 },
                                 child: Icon(
@@ -133,7 +138,7 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
                               ),
                               const Gap(5),
                               Text(
-                                counter.toString(),
+                                quantity.toString(),
                                 style: getTitleStyle(
                                     fontSize: 18,
                                     color: AppColors.white,
@@ -147,7 +152,7 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
                                 elevation: .7,
                                 onPressed: () {
                                   setState(() {
-                                    counter++;
+                                    quantity++;
                                   });
                                 },
                                 child: Icon(
@@ -175,7 +180,7 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
                     Row(
                       children: [
                         Text(
-                          itemData['price'],
+                          itemData['price'].toString(),
                           style: getTitleStyle(
                               color: AppColors.black,
                               fontWeight: FontWeight.w800,
@@ -183,7 +188,20 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
                         ),
                         const Spacer(),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            addToCart(
+                              pName: itemData['name'],
+                              pImage: itemData['image'],
+                              quantity: quantity,
+                              total: (quantity *
+                                      double.parse(
+                                          itemData['price'].toString()))
+                                  .toDouble(),
+                              price: itemData['price'].toDouble(),
+                            );
+                            showErrorDialog(context, 'Added To Cart ✅✅');
+                            Navigator.pop(context);
+                          },
                           child: Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 10),
@@ -252,13 +270,9 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
   addToCart({
     required String pName,
     required String pImage,
-    required String quantity,
+    required int quantity,
     required double total,
     required double price,
-    required String time,
-    required String date,
-    required String name,
-    required String image,
   }) {
     FirebaseFirestore.instance.collection('cart-list').doc(user?.uid).set({
       'p_name': pName,
@@ -266,10 +280,6 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
       'p_image': pImage,
       'total': total,
       'price': price,
-      'time': time,
-      'date': date,
-      'name': name,
-      'image': image,
     }, SetOptions(merge: true));
   }
 

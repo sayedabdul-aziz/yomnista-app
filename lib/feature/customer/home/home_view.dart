@@ -5,6 +5,7 @@ import 'package:borcelle_restaurant/feature/customer/home/search_view.dart';
 import 'package:borcelle_restaurant/feature/customer/menu/menu_view.dart';
 import 'package:borcelle_restaurant/feature/customer/menu/offer_view.dart';
 import 'package:borcelle_restaurant/feature/customer/menu/sales_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class CustomerHomeView extends StatefulWidget {
@@ -58,22 +59,23 @@ class _CustomerHomeViewState extends State<CustomerHomeView> {
             )),
             IconButton(
                 onPressed: () {
-                  // FirebaseFirestore.instance
-                  //     .collection('menu-list')
-                  //     .doc('Margherita')
-                  //     .set({
-                  //   'id': 'Margherita',
-                  //   'name': 'Margherita',
-                  //   'image': null,
-                  //   'category': 'Pizza',
-                  //   'description': 'Pizza Sauce & Mozzarella',
-                  //   'price': 250,
-                  //   'is_offer': false,
-                  //   'offer_persent': 0,
-                  //   'rate': 4,
-                  //   'rate_num': 0,
-                  //   'rate_sum': 4,
-                  // }, SetOptions(merge: true));
+                  FirebaseFirestore.instance
+                      .collection('menu-list')
+                      .doc('Quesadillas')
+                      .set({
+                    'id': 'Quesadillas',
+                    'name': 'Quesadillas',
+                    'image': '',
+                    'category': 'Dish',
+                    'description':
+                        'Chicken and Pepper Jack Quesadillas with Cilantro Slaw',
+                    'price': 260,
+                    'is_offer': false,
+                    'offer_persent': 0,
+                    'rate': 4,
+                    'rate_num': 0,
+                    'rate_sum': 4,
+                  }, SetOptions(merge: true));
                 },
                 icon: Icon(
                   Icons.filter_list_rounded,

@@ -33,19 +33,22 @@ class _CategoryMenuViewState extends State<CategoryMenuView> {
         title: Text(widget.category),
         leading: const CustomBackAction(),
       ),
-      body: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('menu-list')
-              .where('category', isEqualTo: widget.category)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return MenuListItems(data: snapshot.data!);
-          }),
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('menu-list')
+                .where('category', isEqualTo: widget.category)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return MenuListItems(data: snapshot.data!);
+            }),
+      ),
     );
   }
 }

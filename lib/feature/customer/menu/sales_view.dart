@@ -33,19 +33,22 @@ class _CustomerSalesViewState extends State<CustomerSalesView> {
         title: const Text('SALES'),
         leading: const CustomBackAction(),
       ),
-      body: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('menu-list')
-              .where('is_offer', isEqualTo: true)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return MenuListItems(data: snapshot.data!);
-          }),
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('menu-list')
+                .where('is_offer', isEqualTo: true)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return MenuListItems(data: snapshot.data!);
+            }),
+      ),
     );
   }
 }
