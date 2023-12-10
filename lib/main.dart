@@ -54,7 +54,7 @@ class MainApp extends StatelessWidget {
                 backgroundColor: AppColors.color3),
             inputDecorationTheme: InputDecorationTheme(
               contentPadding: const EdgeInsets.only(
-                  left: 20, top: 10, bottom: 10, right: 20),
+                  left: 10, top: 10, bottom: 10, right: 10),
               enabledBorder: OutlineInputBorder(
                 borderRadius: const BorderRadius.all(Radius.circular(5)),
                 borderSide: BorderSide(color: AppColors.black),

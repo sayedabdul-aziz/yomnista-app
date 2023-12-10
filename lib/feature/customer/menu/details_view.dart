@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class CustomerFoodDetailsView extends StatefulWidget {
   const CustomerFoodDetailsView({
@@ -23,7 +24,7 @@ class CustomerFoodDetailsView extends StatefulWidget {
 
 class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  final _message = TextEditingController();
   User? user;
 
   Future<void> _getUser() async {
@@ -37,6 +38,7 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
   }
 
   int quantity = 1;
+  int rate = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,6 +124,7 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
                           child: Row(
                             children: [
                               FloatingActionButton(
+                                heroTag: 'add',
                                 mini: true,
                                 backgroundColor: AppColors.scaffoldBG,
                                 shape: const CircleBorder(),
@@ -146,6 +149,7 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
                               ),
                               const Gap(5),
                               FloatingActionButton(
+                                heroTag: 'remove',
                                 mini: true,
                                 backgroundColor: AppColors.color1,
                                 shape: const CircleBorder(),
@@ -166,10 +170,11 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
                       ],
                     ),
                     const Gap(10),
-                    Text('Description',
-                        style: getTitleStyle().copyWith(
-                          fontFamily: GoogleFonts.lato().fontFamily,
-                        )),
+                    if (itemData['description'] != '')
+                      Text('Description',
+                          style: getTitleStyle().copyWith(
+                            fontFamily: GoogleFonts.lato().fontFamily,
+                          )),
                     const Gap(5),
                     Text(
                       itemData['description'],
@@ -180,7 +185,7 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
                     Row(
                       children: [
                         Text(
-                          itemData['price'].toString(),
+                          'EGP ${itemData['price'].toString()}',
                           style: getTitleStyle(
                               color: AppColors.black,
                               fontWeight: FontWeight.w800,
@@ -224,6 +229,7 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
                     ),
                     const Gap(10),
                     TextFormField(
+                      controller: _message,
                       maxLines: 3,
                       decoration: InputDecoration(
                           hintText: 'Add a comment...',
@@ -236,11 +242,17 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
                           children: List.generate(
                             5,
                             (index) => InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                setState(() {
+                                  rate = index + 1;
+                                });
+                              },
                               child: Padding(
                                 padding: const EdgeInsets.all(4),
                                 child: Icon(
-                                  Icons.star_border_purple500_sharp,
+                                  (rate <= index)
+                                      ? Icons.star_border_purple500_sharp
+                                      : Icons.star_purple500_sharp,
                                   color: AppColors.color1,
                                   size: 27,
                                 ),
@@ -254,7 +266,21 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
                           height: 40,
                           radius: 10,
                           text: 'SEND',
-                          onTap: () {},
+                          onTap: () {
+                            String date =
+                                DateFormat.yMMMMd().format(DateTime.now());
+                            String time =
+                                DateFormat('hh:mm:ss a').format(DateTime.now());
+                            updateFoodRate(itemData['name'], rate,
+                                itemData['rate_num'], itemData['rate_sum']);
+                            addToReport(
+                                message: _message.text,
+                                rate: rate,
+                                time: time,
+                                date: date,
+                                customeId: user!.uid);
+                            _message.text = '';
+                          },
                         )
                       ],
                     ),
@@ -273,21 +299,34 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
     required int quantity,
     required double total,
     required double price,
-  }) {
+  }) async {
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection('cart-list')
+        .doc(user?.uid)
+        .get();
+    double oldTotal = 0.0;
+    if (doc.exists) {
+      Map<String, dynamic> productData = doc.data() as Map<String, dynamic>;
+      oldTotal = (productData['total'] ?? 0.0);
+    }
+
     FirebaseFirestore.instance.collection('cart-list').doc(user?.uid).set({
-      'p_name': pName,
-      'quantity': quantity,
-      'p_image': pImage,
-      'total': total,
-      'price': price,
+      pName: {
+        'p_name': pName,
+        'quantity': quantity,
+        'p_image': pImage,
+        'total': total,
+        'price': price,
+      },
+      'total': total + oldTotal
     }, SetOptions(merge: true));
   }
 
-  updateFoodRate(String foodId, int rate, int oldRate) {
+  updateFoodRate(String foodId, int rate, int rateNum, int oldRate) {
     FirebaseFirestore.instance.collection('menu-list').doc(foodId).set({
       'rate_sum': oldRate + rate,
-      'rate_num': rate + 1,
-      'rate': oldRate + rate / rate + 1
+      'rate_num': (rateNum == 0) ? (rateNum + 2) : (rateNum + 1),
+      'rate': (oldRate + rate) ~/ (rateNum + 1)
     }, SetOptions(merge: true));
   }
 
@@ -296,16 +335,14 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
     required int rate,
     required String time,
     required String date,
-    required String name,
-    required String image,
+    required String customeId,
   }) {
-    FirebaseFirestore.instance.collection('reports-list').doc(user?.uid).set({
+    FirebaseFirestore.instance.collection('reports-list').doc().set({
       'message': message,
       'rate': rate,
       'time': time,
       'date': date,
-      'name': name,
-      'image': image,
+      'customeId': customeId,
     }, SetOptions(merge: true));
   }
 }

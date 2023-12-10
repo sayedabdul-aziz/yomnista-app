@@ -1,17 +1,18 @@
 import 'package:borcelle_restaurant/core/widgets/custom_back_action.dart';
-import 'package:borcelle_restaurant/core/widgets/menu_list_item.dart';
+import 'package:borcelle_restaurant/core/widgets/menu_edit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class CategoryMenuView extends StatefulWidget {
-  const CategoryMenuView({super.key, required this.category});
+class ManagerCategoryMenuView extends StatefulWidget {
+  const ManagerCategoryMenuView({super.key, required this.category});
   final String category;
   @override
-  State<CategoryMenuView> createState() => _CategoryMenuViewState();
+  State<ManagerCategoryMenuView> createState() =>
+      _ManagerCategoryMenuViewState();
 }
 
-class _CategoryMenuViewState extends State<CategoryMenuView> {
+class _ManagerCategoryMenuViewState extends State<ManagerCategoryMenuView> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   User? user;
@@ -47,7 +48,7 @@ class _CategoryMenuViewState extends State<CategoryMenuView> {
                   child: CircularProgressIndicator(),
                 );
               }
-              return MenuListItems(data: snapshot.data!);
+              return EditMenuItems(data: snapshot.data!);
             }),
       ),
     );

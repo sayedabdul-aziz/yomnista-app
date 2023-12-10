@@ -1,5 +1,10 @@
 import 'package:borcelle_restaurant/core/utils/app_colors.dart';
 import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
+import 'package:borcelle_restaurant/feature/manager/menu/menu_view.dart';
+import 'package:borcelle_restaurant/feature/manager/menu/offer_view.dart';
+import 'package:borcelle_restaurant/feature/manager/menu/sales_view.dart';
+import 'package:borcelle_restaurant/feature/manager/menu/top_rated_view.dart';
+import 'package:borcelle_restaurant/feature/manager/reports/reports_view.dart';
 import 'package:borcelle_restaurant/feature/manager/wallet/wallet_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -16,19 +21,155 @@ class ManagerHomeView extends StatefulWidget {
 class _ManagerHomeViewState extends State<ManagerHomeView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Orders'),
+    return SafeArea(
+      child: Scaffold(
+        body: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const ManagerSalesView(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: AppColors.black,
+                          image: const DecorationImage(
+                              opacity: .5, image: AssetImage('assets/11.png'))),
+                      child: Text(
+                        'Sales',
+                        style: getTitleStyle(
+                                color: AppColors.scaffoldBG, fontSize: 36)
+                            .copyWith(
+                          fontFamily: GoogleFonts.khand().fontFamily,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const Gap(10),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const ManagerMenuView(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: AppColors.black,
+                          image: const DecorationImage(
+                              opacity: .5, image: AssetImage('assets/22.png'))),
+                      child: Text(
+                        'Menu',
+                        style: getTitleStyle(
+                                color: AppColors.scaffoldBG, fontSize: 36)
+                            .copyWith(
+                          fontFamily: GoogleFonts.khand().fontFamily,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const Gap(10),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const ManagerOfferView(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: AppColors.black,
+                          image: const DecorationImage(
+                              opacity: .5, image: AssetImage('assets/33.png'))),
+                      child: Text(
+                        'Offers',
+                        style: getTitleStyle(
+                                color: AppColors.scaffoldBG, fontSize: 36)
+                            .copyWith(
+                          fontFamily: GoogleFonts.khand().fontFamily,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const Gap(10),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const ManagerTopRatedView(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: AppColors.black,
+                          image: const DecorationImage(
+                              opacity: .5, image: AssetImage('assets/44.png'))),
+                      child: Text(
+                        'Top Rates',
+                        style: getTitleStyle(
+                                color: AppColors.scaffoldBG, fontSize: 36)
+                            .copyWith(
+                          fontFamily: GoogleFonts.khand().fontFamily,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const Gap(10),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const ManagerReportedView(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: AppColors.black,
+                          image: const DecorationImage(
+                              opacity: .5, image: AssetImage('assets/55.png'))),
+                      child: Text(
+                        'Reports',
+                        style: getTitleStyle(
+                                color: AppColors.scaffoldBG, fontSize: 36)
+                            .copyWith(
+                          fontFamily: GoogleFonts.khand().fontFamily,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const Gap(10),
+              ],
+            )),
       ),
-      body: Padding(
-          padding: const EdgeInsets.all(10),
-          child: ListView.separated(
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return const OrderCartWidget();
-            },
-            separatorBuilder: (context, index) => const Gap(15),
-          )),
     );
   }
 }

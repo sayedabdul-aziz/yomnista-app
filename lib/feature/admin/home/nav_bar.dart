@@ -1,7 +1,7 @@
 import 'package:borcelle_restaurant/core/utils/app_colors.dart';
 import 'package:borcelle_restaurant/feature/admin/home/home_view.dart';
 import 'package:borcelle_restaurant/feature/admin/salary/salary_view.dart';
-import 'package:borcelle_restaurant/feature/customer/profile/profile_view.dart';
+import 'package:borcelle_restaurant/feature/profile/profile_view.dart';
 import 'package:flutter/material.dart';
 
 class AdminNavBarView extends StatefulWidget {

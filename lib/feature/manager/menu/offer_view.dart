@@ -1,17 +1,17 @@
 import 'package:borcelle_restaurant/core/widgets/custom_back_action.dart';
-import 'package:borcelle_restaurant/core/widgets/menu_list_item.dart';
+import 'package:borcelle_restaurant/core/widgets/menu_edit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class CategoryMenuView extends StatefulWidget {
-  const CategoryMenuView({super.key, required this.category});
-  final String category;
+class ManagerOfferView extends StatefulWidget {
+  const ManagerOfferView({super.key});
+
   @override
-  State<CategoryMenuView> createState() => _CategoryMenuViewState();
+  State<ManagerOfferView> createState() => _ManagerOfferViewState();
 }
 
-class _CategoryMenuViewState extends State<CategoryMenuView> {
+class _ManagerOfferViewState extends State<ManagerOfferView> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   User? user;
@@ -30,16 +30,14 @@ class _CategoryMenuViewState extends State<CategoryMenuView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.category),
+        title: const Text('OFFERS'),
         leading: const CustomBackAction(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: StreamBuilder(
             stream: FirebaseFirestore.instance
-                .collection('menu-list')
-                .where('category', isEqualTo: widget.category)
-                .orderBy('rate', descending: true)
+                .collection('offers-list')
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -47,7 +45,7 @@ class _CategoryMenuViewState extends State<CategoryMenuView> {
                   child: CircularProgressIndicator(),
                 );
               }
-              return MenuListItems(data: snapshot.data!);
+              return EditMenuItems(data: snapshot.data!);
             }),
       ),
     );

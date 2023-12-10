@@ -67,7 +67,7 @@ class MenuListItems extends StatelessWidget {
                             Text(
                               item['name'],
                               style: getTitleStyle(
-                                  color: AppColors.black,
+                                  color: AppColors.color1,
                                   fontWeight: FontWeight.w900,
                                   fontSize: 16),
                             ),
@@ -75,18 +75,18 @@ class MenuListItems extends StatelessWidget {
                             Row(
                               children: [
                                 Text(
-                                  'EGP ${((item['offer_persent'] != 0) ? item['price'] * item['offer_persent'].toString() : item['price'])}',
+                                  'EGP ${((item['offer_persent'] != 0) ? (item['price'] * (100 - item['offer_persent']) * .01).toString() : item['price']).toString()}',
                                   style: getTitleStyle(
-                                      color: AppColors.black,
+                                      color: AppColors.color2,
                                       fontWeight: FontWeight.w800,
-                                      fontSize: 14),
+                                      fontSize: 16),
                                 ),
                                 const SizedBox(
                                   width: 5,
                                 ),
-                                if (item['offer_persent'] != 0)
+                                if ((item['offer_persent']) != 0)
                                   Text(
-                                    item['price'],
+                                    'EGP ${item['price']}',
                                     style: getTitleStyle(
                                             color:
                                                 AppColors.black.withOpacity(.5),
@@ -99,7 +99,7 @@ class MenuListItems extends StatelessWidget {
                                                 TextDecoration.lineThrough),
                                   ),
                                 const Spacer(),
-                                if (item['offer_persent'] != 0)
+                                if ((item['offer_persent']) != 0)
                                   Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 7, vertical: 3),
@@ -108,7 +108,7 @@ class MenuListItems extends StatelessWidget {
                                         borderRadius:
                                             BorderRadius.circular(20)),
                                     child: Text(
-                                      '${item['offer_persent']}% OFF',
+                                      '${(item['offer_persent'])}% OFF',
                                       style: getsmallStyle(
                                           color: AppColors.white,
                                           fontWeight: FontWeight.bold),
@@ -116,9 +116,16 @@ class MenuListItems extends StatelessWidget {
                                   )
                               ],
                             ),
-                            const Spacer(
-                              flex: 2,
-                            ),
+                            const Gap(10),
+                            if (item['description'] != '')
+                              Text(
+                                item['description'],
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: getTitleStyle(
+                                    color: AppColors.black, fontSize: 12),
+                              ),
+                            const Gap(10),
                             Row(
                               children: [
                                 const Icon(
@@ -151,7 +158,6 @@ class MenuListItems extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const Spacer(),
                           ],
                         ),
                       ))

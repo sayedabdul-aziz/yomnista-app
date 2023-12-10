@@ -1,5 +1,5 @@
 import 'package:borcelle_restaurant/feature/auth/presentation/view/signin_view.dart';
-import 'package:borcelle_restaurant/feature/customer/home/nav_bar.dart';
+import 'package:borcelle_restaurant/feature/manager/home/nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +25,7 @@ class _SplashViewState extends State<SplashView> {
       () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) =>
-              (user != null) ? const CustomerNavBarView() : const LoginView(),
+              (user != null) ? const ManagerNavBarView() : const LoginView(),
         ));
       },
     );

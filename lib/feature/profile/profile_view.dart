@@ -177,7 +177,9 @@ class _ProfileViewState extends State<ProfileView> {
                                     : (_imagePath != null)
                                         ? FileImage(File(_imagePath!))
                                             as ImageProvider
-                                        : const AssetImage('assets/user.png'),
+                                        : const AssetImage(
+                                            'assets/user.png',
+                                          ),
                               ),
                             ),
                             GestureDetector(
@@ -259,8 +261,6 @@ class _ProfileViewState extends State<ProfileView> {
                               const Gap(10),
                               Text(
                                 "${userData['email']}",
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
                                 style: getsmallStyle(),
                               ),
                             ],

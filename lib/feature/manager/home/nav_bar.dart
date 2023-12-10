@@ -1,7 +1,7 @@
 import 'package:borcelle_restaurant/core/utils/app_colors.dart';
-import 'package:borcelle_restaurant/feature/admin/salary/salary_view.dart';
-import 'package:borcelle_restaurant/feature/customer/profile/profile_view.dart';
 import 'package:borcelle_restaurant/feature/manager/home/home_view.dart';
+import 'package:borcelle_restaurant/feature/manager/wallet/wallet_view.dart';
+import 'package:borcelle_restaurant/feature/profile/profile_view.dart';
 import 'package:flutter/material.dart';
 
 class ManagerNavBarView extends StatefulWidget {
@@ -14,7 +14,7 @@ class ManagerNavBarView extends StatefulWidget {
 class _ManagerNavBarViewState extends State<ManagerNavBarView> {
   List<Widget> views = [
     const ManagerHomeView(),
-    const AdminSalaryView(),
+    const ManagerWalletView(),
     const ProfileView()
   ];
   int _selectedItem = 0;
@@ -39,8 +39,8 @@ class _ManagerNavBarViewState extends State<ManagerNavBarView> {
                   icon: Image.asset('assets/home.png'),
                   label: ''),
               BottomNavigationBarItem(
-                  activeIcon: Image.asset('assets/cart1.png'),
-                  icon: Image.asset('assets/cart.png'),
+                  activeIcon: Image.asset('assets/ticket1.png'),
+                  icon: Image.asset('assets/ticket.png'),
                   label: ''),
               BottomNavigationBarItem(
                   activeIcon: Image.asset('assets/user1.png'),
