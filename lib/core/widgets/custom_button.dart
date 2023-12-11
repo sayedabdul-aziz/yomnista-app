@@ -1,5 +1,5 @@
-import 'package:borcelle_restaurant/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton(
@@ -8,6 +8,8 @@ class CustomButton extends StatelessWidget {
       this.onTap,
       this.height = 50,
       this.radius = 5,
+      this.style,
+      this.color = const Color(0xFFAF4F41),
       this.width = double.infinity});
 
   final String text;
@@ -15,6 +17,8 @@ class CustomButton extends StatelessWidget {
   final double height;
   final double width;
   final double radius;
+  final Color color;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +29,12 @@ class CustomButton extends StatelessWidget {
         width: width,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            color: AppColors.color1,
-            borderRadius: BorderRadius.circular(radius)),
+            color: color, borderRadius: BorderRadius.circular(radius)),
         child: Text(
           text,
-          style: TextStyle(
-              color: AppColors.scaffoldBG, fontWeight: FontWeight.bold),
+          style: style ??
+              TextStyle(
+                  color: AppColors.scaffoldBG, fontWeight: FontWeight.bold),
         ),
       ),
     );

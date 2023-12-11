@@ -1,10 +1,10 @@
-import 'package:borcelle_restaurant/core/utils/app_colors.dart';
-import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
-import 'package:borcelle_restaurant/feature/customer/home/favourite_view.dart';
-import 'package:borcelle_restaurant/feature/customer/home/search_view.dart';
-import 'package:borcelle_restaurant/feature/customer/menu/menu_view.dart';
-import 'package:borcelle_restaurant/feature/customer/menu/offer_view.dart';
-import 'package:borcelle_restaurant/feature/customer/menu/sales_view.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
+import 'package:yomnista/core/utils/app_text_styles.dart';
+import 'package:yomnista/feature/customer/home/favourite_view.dart';
+import 'package:yomnista/feature/customer/home/search_view.dart';
+import 'package:yomnista/feature/customer/menu/menu_view.dart';
+import 'package:yomnista/feature/customer/menu/offer_view.dart';
+import 'package:yomnista/feature/customer/menu/sales_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 

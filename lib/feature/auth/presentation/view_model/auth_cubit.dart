@@ -1,7 +1,7 @@
-import 'package:borcelle_restaurant/feature/auth/presentation/view_model/auth_states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yomnista/feature/auth/presentation/view_model/auth_states.dart';
 
 class AuthCubit extends Cubit<AuthStates> {
   AuthCubit() : super(AuthInitialState());
@@ -69,10 +69,7 @@ class AuthCubit extends Cubit<AuthStates> {
         }, SetOptions(merge: true));
       }
 
-      if (credential.user!.photoURL != null) {
-        String role = credential.user!.photoURL!;
-        emit(AuthSuccessState(role: role));
-      }
+      emit(AuthSuccessState(role: role.toString()));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         emit(AuthFailureState(error: 'Email is already exist!'));

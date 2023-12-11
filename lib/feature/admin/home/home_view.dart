@@ -1,9 +1,10 @@
-import 'package:borcelle_restaurant/core/utils/app_colors.dart';
-import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
-import 'package:borcelle_restaurant/feature/manager/wallet/wallet_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
+import 'package:yomnista/core/utils/app_text_styles.dart';
+import 'package:yomnista/core/widgets/order_card_clip.dart';
 
 class AdminHomeView extends StatefulWidget {
   const AdminHomeView({super.key});
@@ -21,19 +22,103 @@ class _AdminHomeViewState extends State<AdminHomeView> {
       ),
       body: Padding(
           padding: const EdgeInsets.all(10),
-          child: ListView.separated(
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return const OrderCartWidget();
-            },
-            separatorBuilder: (context, index) => const Gap(15),
-          )),
+          child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('order-list')
+                  .orderBy('time', descending: true)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.data!.docs.isEmpty ||
+                    snapshot.data!.docs[0]['total'] == 0) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.remove_shopping_cart,
+                          size: 150,
+                          color: AppColors.color3,
+                        ),
+                        const Gap(20),
+                        Text(
+                          'No orders have been added yet.',
+                          textAlign: TextAlign.center,
+                          style: getbodyStyle(
+                            fontSize: 16,
+                            color: AppColors.color1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return ListView.separated(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      return OrderCartWidget(
+                        data: snapshot.data!.docs[index],
+                      );
+                    },
+                    separatorBuilder: (context, index) => const Gap(15),
+                  );
+                }
+              })),
     );
   }
 }
 
-class OrderCartWidget extends StatelessWidget {
-  const OrderCartWidget({super.key});
+class OrderCartWidget extends StatefulWidget {
+  const OrderCartWidget({
+    super.key,
+    required this.data,
+  });
+
+  final QueryDocumentSnapshot data;
+
+  @override
+  State<OrderCartWidget> createState() => _OrderCartWidgetState();
+}
+
+class _OrderCartWidgetState extends State<OrderCartWidget> {
+  @override
+  void initState() {
+    super.initState();
+    getDataUser(widget.data['customerId']);
+    getItemsInOrder();
+  }
+
+  String name = '';
+  String? image;
+  List<String> keyy = [];
+  getItemsInOrder() {
+    Map<String, dynamic> productData =
+        widget.data.data() as Map<String, dynamic>;
+    keyy = productData.keys.where((element) {
+      if (element == 'total' ||
+          element == 'customerId' ||
+          element == 'time' ||
+          element == 'date') {
+        return false;
+      }
+      return true;
+    }).toList();
+  }
+
+  getDataUser(id) async {
+    DocumentSnapshot doc =
+        await FirebaseFirestore.instance.collection('users').doc(id).get();
+    if (doc.exists) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      setState(() {
+        name = data['fname'] + ' ' + data['lname'];
+        image = data['image'];
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,39 +145,28 @@ class OrderCartWidget extends StatelessWidget {
                     child: RotatedBox(
                         quarterTurns: 2,
                         child: Padding(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.only(left: 20),
                           child: Column(
                             children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    'Pizza',
-                                    style: getbodyStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    'x1',
-                                    style: getbodyStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    'Pizza Mashrome',
-                                    style: getbodyStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    'x2',
-                                    style: getbodyStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
+                              for (int i = 0; i < keyy.length; i++) ...{
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        widget.data[keyy[i]]['p_name'],
+                                        style: getbodyStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    const Gap(3),
+                                    Text(
+                                      'x${widget.data[keyy[i]]['quantity']}',
+                                      style: getbodyStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              },
                               const Spacer(),
                               Row(
                                 children: [
@@ -135,22 +209,25 @@ class OrderCartWidget extends StatelessWidget {
                                 CircleAvatar(
                                   radius: 15,
                                   backgroundColor: AppColors.color1,
+                                  backgroundImage: (image != null)
+                                      ? NetworkImage(image!) as ImageProvider
+                                      : const AssetImage('assets/user.png'),
                                 ),
-                                const Text('Mohamed Tarek'),
+                                Text(name),
                               ],
                             ),
                             const Gap(10),
                             Text(
-                              'SEP  08',
+                              widget.data['date'],
                               style: getbodyStyle().copyWith(
-                                  fontSize: 18,
+                                  fontSize: 16,
                                   fontFamily:
                                       GoogleFonts.courierPrime().fontFamily),
                             ),
                             Text(
-                              '08: 00 PM',
+                              widget.data['time'],
                               style: getbodyStyle().copyWith(
-                                  fontSize: 18,
+                                  fontSize: 16,
                                   fontFamily:
                                       GoogleFonts.courierPrime().fontFamily),
                             ),

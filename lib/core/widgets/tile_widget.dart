@@ -1,5 +1,5 @@
-import 'package:borcelle_restaurant/core/utils/app_colors.dart';
-import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
+import 'package:yomnista/core/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 class TileWidget extends StatelessWidget {

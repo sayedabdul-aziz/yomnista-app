@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:borcelle_restaurant/core/utils/app_colors.dart';
-import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
-import 'package:borcelle_restaurant/core/widgets/custom_button.dart';
-import 'package:borcelle_restaurant/feature/auth/presentation/view/signin_view.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
+import 'package:yomnista/core/utils/app_text_styles.dart';
+import 'package:yomnista/core/widgets/custom_button.dart';
+import 'package:yomnista/feature/auth/presentation/view/signin_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';

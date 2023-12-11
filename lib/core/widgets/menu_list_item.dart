@@ -1,6 +1,6 @@
-import 'package:borcelle_restaurant/core/utils/app_colors.dart';
-import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
-import 'package:borcelle_restaurant/feature/customer/menu/details_view.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
+import 'package:yomnista/core/utils/app_text_styles.dart';
+import 'package:yomnista/feature/customer/menu/details_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';

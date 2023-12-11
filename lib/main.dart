@@ -1,12 +1,12 @@
-import 'package:borcelle_restaurant/core/utils/app_colors.dart';
-import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
-import 'package:borcelle_restaurant/feature/auth/presentation/view_model/auth_cubit.dart';
-import 'package:borcelle_restaurant/feature/splash_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
+import 'package:yomnista/core/utils/app_text_styles.dart';
+import 'package:yomnista/feature/auth/presentation/view_model/auth_cubit.dart';
+import 'package:yomnista/feature/splash_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +17,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
       options: const FirebaseOptions(
           apiKey: 'AIzaSyCSEBjGvGkvbSCeiSwmR-X7-L9h2BVC678',
-          appId: 'com.example.restaurant_app',
+          appId: 'com.example.yomnista',
           messagingSenderId: '768932994403',
           projectId: 'restaurant-app-12-2023'));
   runApp(const MainApp());
@@ -85,6 +85,8 @@ class MainApp extends StatelessWidget {
               indent: 10,
               endIndent: 10,
             ),
+            progressIndicatorTheme:
+                ProgressIndicatorThemeData(color: AppColors.color1),
             fontFamily: GoogleFonts.inter().fontFamily),
         home: const SplashView(),
       ),

@@ -1,12 +1,12 @@
-import 'package:borcelle_restaurant/core/utils/app_colors.dart';
-import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
-import 'package:borcelle_restaurant/core/widgets/custom_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
+import 'package:yomnista/core/utils/app_text_styles.dart';
+import 'package:yomnista/core/widgets/custom_button.dart';
 
 class CustomerCartView extends StatefulWidget {
   const CustomerCartView({super.key});
@@ -88,9 +88,7 @@ class _CustomerCartViewState extends State<CustomerCartView> {
                             Map<String, dynamic> item =
                                 snapshot.data!.data()![keyy[index]];
 
-                            return
-                            
-                             Container(
+                            return Container(
                               height: 100,
                               decoration: BoxDecoration(
                                 color: AppColors.white,
@@ -172,8 +170,8 @@ class _CustomerCartViewState extends State<CustomerCartView> {
                             onTap: () {
                               String date =
                                   DateFormat.MMMMd().format(DateTime.now());
-                              String time =
-                                  DateFormat('hh:mm a').format(DateTime.now());
+                              String time = DateFormat('hh:mm:ss a')
+                                  .format(DateTime.now());
                               checkoutTheOrder(
                                   date: date,
                                   time: time,

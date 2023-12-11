@@ -1,14 +1,14 @@
-import 'package:borcelle_restaurant/core/utils/app_colors.dart';
-import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
-import 'package:borcelle_restaurant/core/widgets/custom_back_action.dart';
-import 'package:borcelle_restaurant/core/widgets/custom_button.dart';
-import 'package:borcelle_restaurant/core/widgets/custom_error.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
+import 'package:yomnista/core/utils/app_text_styles.dart';
+import 'package:yomnista/core/widgets/custom_back_action.dart';
+import 'package:yomnista/core/widgets/custom_button.dart';
+import 'package:yomnista/core/widgets/custom_error.dart';
 
 class CustomerFoodDetailsView extends StatefulWidget {
   const CustomerFoodDetailsView({
@@ -228,60 +228,78 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
                       color: AppColors.color2,
                     ),
                     const Gap(10),
-                    TextFormField(
-                      controller: _message,
-                      maxLines: 3,
-                      decoration: InputDecoration(
-                          hintText: 'Add a comment...',
-                          fillColor: AppColors.white),
-                    ),
-                    const Gap(15),
-                    Row(
+                    ExpansionTile(
+                      collapsedBackgroundColor: AppColors.color3,
+                      collapsedIconColor: AppColors.color2,
+                      backgroundColor: Colors.transparent,
+                      shape: ContinuousRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      childrenPadding: const EdgeInsets.symmetric(vertical: 10),
+                      subtitle: Text(
+                        'Send Your Feedback Now',
+                        style: getsmallStyle(),
+                      ),
+                      title: Text(
+                        'Review',
+                        style: getTitleStyle(fontSize: 16),
+                      ),
                       children: [
-                        Row(
-                          children: List.generate(
-                            5,
-                            (index) => InkWell(
-                              onTap: () {
-                                setState(() {
-                                  rate = index + 1;
-                                });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(4),
-                                child: Icon(
-                                  (rate <= index)
-                                      ? Icons.star_border_purple500_sharp
-                                      : Icons.star_purple500_sharp,
-                                  color: AppColors.color1,
-                                  size: 27,
-                                ),
-                              ),
-                            ),
-                          ).toList(),
+                        TextFormField(
+                          controller: _message,
+                          maxLines: 3,
+                          decoration: InputDecoration(
+                              hintText: 'Add a comment...',
+                              fillColor: AppColors.white),
                         ),
-                        const Spacer(),
-                        CustomButton(
-                          width: 90,
-                          height: 40,
-                          radius: 10,
-                          text: 'SEND',
-                          onTap: () {
-                            String date =
-                                DateFormat.yMMMMd().format(DateTime.now());
-                            String time =
-                                DateFormat('hh:mm:ss a').format(DateTime.now());
-                            updateFoodRate(itemData['name'], rate,
-                                itemData['rate_num'], itemData['rate_sum']);
-                            addToReport(
-                                message: _message.text,
-                                rate: rate,
-                                time: time,
-                                date: date,
-                                customeId: user!.uid);
-                            _message.text = '';
-                          },
-                        )
+                        const Gap(15),
+                        Row(
+                          children: [
+                            Row(
+                              children: List.generate(
+                                5,
+                                (index) => InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      rate = index + 1;
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4),
+                                    child: Icon(
+                                      (rate <= index)
+                                          ? Icons.star_border_purple500_sharp
+                                          : Icons.star_purple500_sharp,
+                                      color: AppColors.color1,
+                                      size: 27,
+                                    ),
+                                  ),
+                                ),
+                              ).toList(),
+                            ),
+                            const Spacer(),
+                            CustomButton(
+                              width: 90,
+                              height: 40,
+                              radius: 10,
+                              text: 'SEND',
+                              onTap: () {
+                                String date =
+                                    DateFormat.yMMMMd().format(DateTime.now());
+                                String time = DateFormat('hh:mm:ss a')
+                                    .format(DateTime.now());
+                                updateFoodRate(itemData['name'], rate,
+                                    itemData['rate_num'], itemData['rate_sum']);
+                                addToReport(
+                                    message: _message.text,
+                                    rate: rate,
+                                    time: time,
+                                    date: date,
+                                    customeId: user!.uid);
+                                _message.text = '';
+                              },
+                            )
+                          ],
+                        ),
                       ],
                     ),
                     const Gap(15),

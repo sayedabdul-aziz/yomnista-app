@@ -1,4 +1,4 @@
-import 'package:borcelle_restaurant/core/utils/app_colors.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentCard extends StatelessWidget {

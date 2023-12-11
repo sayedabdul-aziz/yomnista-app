@@ -1,7 +1,7 @@
-import 'package:borcelle_restaurant/core/utils/app_colors.dart';
-import 'package:borcelle_restaurant/feature/manager/home/home_view.dart';
-import 'package:borcelle_restaurant/feature/manager/wallet/wallet_view.dart';
-import 'package:borcelle_restaurant/feature/profile/profile_view.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
+import 'package:yomnista/feature/manager/home/home_view.dart';
+import 'package:yomnista/feature/manager/wallet/wallet_view.dart';
+import 'package:yomnista/feature/profile/profile_view.dart';
 import 'package:flutter/material.dart';
 
 class ManagerNavBarView extends StatefulWidget {

@@ -1,5 +1,5 @@
-import 'package:borcelle_restaurant/core/widgets/custom_back_action.dart';
-import 'package:borcelle_restaurant/core/widgets/menu_list_item.dart';
+import 'package:yomnista/core/widgets/custom_back_action.dart';
+import 'package:yomnista/core/widgets/menu_list_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

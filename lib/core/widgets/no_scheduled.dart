@@ -1,4 +1,4 @@
-import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
+import 'package:yomnista/core/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 

@@ -1,16 +1,19 @@
-import 'package:borcelle_restaurant/core/functions/email_validate.dart';
-import 'package:borcelle_restaurant/core/utils/app_colors.dart';
-import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
-import 'package:borcelle_restaurant/core/widgets/custom_button.dart';
-import 'package:borcelle_restaurant/core/widgets/custom_error.dart';
-import 'package:borcelle_restaurant/core/widgets/custom_loading.dart';
-import 'package:borcelle_restaurant/feature/auth/presentation/view/forget_password.dart';
-import 'package:borcelle_restaurant/feature/auth/presentation/view/register_view.dart';
-import 'package:borcelle_restaurant/feature/auth/presentation/view_model/auth_cubit.dart';
-import 'package:borcelle_restaurant/feature/auth/presentation/view_model/auth_states.dart';
-import 'package:borcelle_restaurant/feature/customer/home/nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yomnista/core/functions/email_validate.dart';
+import 'package:yomnista/core/services/local_storage.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
+import 'package:yomnista/core/utils/app_text_styles.dart';
+import 'package:yomnista/core/widgets/custom_button.dart';
+import 'package:yomnista/core/widgets/custom_error.dart';
+import 'package:yomnista/core/widgets/custom_loading.dart';
+import 'package:yomnista/feature/admin/home/nav_bar.dart';
+import 'package:yomnista/feature/auth/presentation/view/forget_password.dart';
+import 'package:yomnista/feature/auth/presentation/view/register_view.dart';
+import 'package:yomnista/feature/auth/presentation/view_model/auth_cubit.dart';
+import 'package:yomnista/feature/auth/presentation/view_model/auth_states.dart';
+import 'package:yomnista/feature/customer/home/nav_bar.dart';
+import 'package:yomnista/feature/manager/home/nav_bar.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({
@@ -35,6 +38,7 @@ class _LoginViewState extends State<LoginView> {
       listener: (context, state) {
         if (state is AuthSuccessState) {
           if (state.role == '0') {
+            AppLocal.cacheData(AppLocal.role, '0');
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => const CustomerNavBarView(),
@@ -42,16 +46,18 @@ class _LoginViewState extends State<LoginView> {
               (route) => false,
             );
           } else if (state.role == '1') {
+            AppLocal.cacheData(AppLocal.role, '1');
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                builder: (context) => const CustomerNavBarView(),
+                builder: (context) => const ManagerNavBarView(),
               ),
               (route) => false,
             );
           } else {
+            AppLocal.cacheData(AppLocal.role, '2');
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                builder: (context) => const CustomerNavBarView(),
+                builder: (context) => const AdminNavBarView(),
               ),
               (route) => false,
             );

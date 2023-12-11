@@ -1,15 +1,9 @@
-import 'dart:io';
-
-import 'package:borcelle_restaurant/core/utils/app_colors.dart';
-import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
-import 'package:borcelle_restaurant/core/widgets/custom_button.dart';
-import 'package:borcelle_restaurant/feature/auth/presentation/view/signin_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
+import 'package:yomnista/core/utils/app_text_styles.dart';
+import 'package:yomnista/core/widgets/custom_button.dart';
 
 class AdminSalaryView extends StatefulWidget {
   const AdminSalaryView({super.key});
@@ -19,414 +13,166 @@ class AdminSalaryView extends StatefulWidget {
 }
 
 class _AdminSalaryViewState extends State<AdminSalaryView> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instanceFor(
-      bucket: 'gs://restaurant-app-12-2023.appspot.com');
-  User? user;
-
-  Future<void> _getUser() async {
-    user = _auth.currentUser;
-  }
-
-  List labelName = [
-    'First Name',
-    'Last Name',
-    'Username',
-  ];
-
-  List value = [
-    "fname",
-    "lname",
-    "username",
-  ];
-
-  String? _imagePath;
-  File? file;
-  String? profileUrl;
-
-  uploadImageToFireStore(File image, String imageName) async {
-    Reference ref =
-        _storage.ref().child('users/${_auth.currentUser!.uid}$imageName');
-    SettableMetadata metadata = SettableMetadata(contentType: 'image/jpeg');
-    await ref.putFile(image, metadata);
-    String url = await ref.getDownloadURL();
-    return url;
-  }
-
-  Future<void> _pickImage() async {
-    _getUser();
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _imagePath = pickedFile.path;
-        file = File(pickedFile.path);
-      });
-    }
-    profileUrl = await uploadImageToFireStore(file!, 'user');
-    FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
-      'image': profileUrl,
-    }, SetOptions(merge: true));
-  }
-
   @override
   void initState() {
     super.initState();
-    _getUser();
   }
 
+  bool isShow = false;
+  double total = 0.0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: IconButton(
-              splashRadius: 25,
-              icon: Icon(
-                Icons.logout,
-                color: AppColors.color1,
-              ),
-              onPressed: () {
-                showDialog(
-                  barrierColor: Colors.black.withOpacity(.7),
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      shape: ContinuousRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      backgroundColor: AppColors.color3,
-                      title: Text(
-                        'Are you want to logout?',
-                        style: getTitleStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            'Cancel',
-                            style: getbodyStyle(fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                        TextButton(
-                            style: TextButton.styleFrom(
-                                backgroundColor: AppColors.redColor),
-                            onPressed: () async {
-                              await _auth.signOut().then((value) {
-                                Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                    builder: (context) => const LoginView(),
-                                  ),
-                                  (route) => false,
-                                );
-                              });
-                            },
-                            child: Text(
-                              'LOGOUT',
-                              style: getbodyStyle(
-                                  color: AppColors.white,
-                                  fontWeight: FontWeight.w600),
-                            )),
-                      ],
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
-        title: const Text('Profile'),
+        backgroundColor: AppColors.scaffoldBG,
+        // title: const Text(''),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('users')
-              .doc(user!.uid)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            var userData = snapshot.data;
-            return Padding(
-              padding: const EdgeInsets.all(15),
-              child: SingleChildScrollView(
+            stream:
+                FirebaseFirestore.instance.collection('order-list').snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              total = 0;
+              for (int i = 0; i < snapshot.data!.docs.length; i++) {
+                total += snapshot.data!.docs[i]['total'];
+              }
+              return Padding(
+                padding: const EdgeInsets.all(15),
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            CircleAvatar(
-                              radius: 60,
-                              backgroundColor: AppColors.white,
-                              child: CircleAvatar(
-                                backgroundColor: AppColors.white,
-                                radius: 60,
-                                backgroundImage: (userData?['image'] != null)
-                                    ? NetworkImage(userData?['image'])
-                                    : (_imagePath != null)
-                                        ? FileImage(File(_imagePath!))
-                                            as ImageProvider
-                                        : const AssetImage('assets/user.png'),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                await _pickImage();
-                              },
-                              child: CircleAvatar(
-                                radius: 15,
-                                backgroundColor: AppColors.scaffoldBG,
-                                child: Icon(
-                                  Icons.camera_alt_rounded,
-                                  size: 20,
-                                  color: AppColors.color1,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: AppColors.color1,
+                          image: const DecorationImage(
+                              fit: BoxFit.cover,
+                              colorFilter: ColorFilter.mode(
+                                  Colors.white, BlendMode.srcIn),
+                              image: AssetImage('assets/cart-bg.png'))),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 15),
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
                             children: [
                               Text(
-                                "${userData!['fname']} ${userData['lname']}",
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: getTitleStyle(),
+                                'Total Balance',
+                                style: getbodyStyle(
+                                    color: AppColors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500),
                               ),
+                              IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isShow = !isShow;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    isShow
+                                        ? Icons.remove_red_eye
+                                        : Icons.visibility_off,
+                                    color: AppColors.color2,
+                                  ))
+                            ],
+                          ),
+                          // const Gap(10),
+                          Row(
+                            children: [
                               Text(
-                                "@${userData['username']}",
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: getsmallStyle(),
+                                '  EGP',
+                                style: getbodyStyle(
+                                    color: AppColors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              const Gap(10),
+                              Text(
+                                isShow ? total.toString() : '',
+                                style: getbodyStyle(
+                                    color: AppColors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
+                          const Gap(20),
+                          CustomButton(
+                            text: 'SHOW DETAILS',
+                            color: AppColors.white,
+                            style: getbodyStyle(
+                                color: AppColors.color1, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Gap(15),
+                    Row(
+                      children: [
+                        Text(
+                          'Recent Transaction',
+                          style: getbodyStyle(fontSize: 24),
                         ),
                       ],
                     ),
                     const Gap(20),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      alignment: Alignment.centerLeft,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: AppColors.color3,
-                      ),
+                    const Expanded(
                       child: Column(
                         children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.verified_user_rounded,
-                                color: AppColors.color1,
-                              ),
-                              const Gap(10),
-                              Text(
-                                "Role : ${userData['role']}",
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: getTitleStyle(
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Gap(10),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.email_rounded,
-                                color: AppColors.color1,
-                              ),
-                              const Gap(10),
-                              Text(
-                                "${userData['email']}",
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: getsmallStyle(),
-                              ),
-                            ],
-                          ),
+                          CardItem(
+                              name: 'Base Salary', image: 'assets/coin.png'),
+                          Gap(10),
+                          CardItem(name: 'Bonus', image: 'assets/money2.png'),
+                          Gap(10),
+                          CardItem(name: 'Discount', image: 'assets/money.png'),
                         ],
                       ),
                     ),
-                    const Gap(10),
-                    Divider(
-                      color: AppColors.color1,
-                    ),
-                    const Gap(10),
-                    Row(
-                      children: [
-                        Text(
-                          " Edit Information",
-                          style: getTitleStyle(
-                              fontSize: 16, color: AppColors.black),
-                        ),
-                      ],
-                    ),
-                    const Gap(10),
-                    Column(
-                      children: List.generate(
-                        labelName.length,
-                        (index) => Container(
-                          margin: const EdgeInsets.only(bottom: 15),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: const Color(0xffFFE2BD),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: AppColors.black.withOpacity(.2),
-                                    spreadRadius: 0,
-                                    offset: const Offset(5, 2),
-                                    blurRadius: 8)
-                              ]),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 5),
-                          width: MediaQuery.of(context).size.width,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                labelName[index],
-                                style: getTitleStyle(
-                                    color: AppColors.color1,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              IconButton(
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        var con = TextEditingController(
-                                            text: userData[value[index]]
-                                                        ?.isEmpty ??
-                                                    true
-                                                ? 'Not Added'
-                                                : userData[value[index]]);
-                                        var form = GlobalKey<FormState>();
-                                        return SimpleDialog(
-                                          backgroundColor: AppColors.color3,
-                                          alignment: Alignment.center,
-                                          contentPadding:
-                                              const EdgeInsets.all(10),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          children: [
-                                            Form(
-                                              key: form,
-                                              child: Column(
-                                                children: [
-                                                  Text(
-                                                    'Enter ${labelName[index]}',
-                                                    style: getbodyStyle(
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  TextFormField(
-                                                    controller: con,
-                                                    // decoration: InputDecoration(
-                                                    //     hintText: value[index]),
-                                                    validator: (value) {
-                                                      if (value!.isEmpty) {
-                                                        return 'Please Enter the ${labelName[index]}.';
-                                                      }
-                                                      return null;
-                                                    },
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 20,
-                                                  ),
-                                                  CustomButton(
-                                                    text: 'EDIT',
-                                                    onTap: () {},
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                  icon: Icon(
-                                    Icons.mode_edit_outline_outlined,
-                                    color: AppColors.color1,
-                                  ))
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const Gap(10),
-                    Divider(
-                      color: AppColors.color1,
-                    ),
-                    const Gap(10),
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 15),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: const Color(0xffFFE2BD),
-                          boxShadow: [
-                            BoxShadow(
-                                color: AppColors.black.withOpacity(.2),
-                                spreadRadius: 0,
-                                offset: const Offset(5, 2),
-                                blurRadius: 10)
-                          ]),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 5),
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Help Center',
-                            style: getTitleStyle(
-                                color: AppColors.color1,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.help_outline_sharp,
-                                color: AppColors.color1,
-                              ))
-                        ],
-                      ),
-                    ),
-                    const Gap(10),
                   ],
                 ),
-              ),
-            );
-          },
-        ),
+              );
+            }),
       ),
     );
+  }
+}
+
+class CardItem extends StatelessWidget {
+  const CardItem({
+    super.key,
+    required this.name,
+    required this.image,
+  });
+  final String name;
+  final String image;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        alignment: Alignment.center,
+        color: AppColors.white,
+        padding: const EdgeInsets.only(left: 20, top: 20, bottom: 18),
+        child: Row(
+          children: [
+            Image.asset(image),
+            const Gap(10),
+            Text(name),
+            const Spacer(),
+            IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 18,
+                )),
+          ],
+        ));
   }
 }

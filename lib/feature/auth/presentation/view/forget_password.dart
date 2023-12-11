@@ -1,10 +1,10 @@
-import 'package:borcelle_restaurant/core/functions/email_validate.dart';
-import 'package:borcelle_restaurant/core/utils/app_colors.dart';
-import 'package:borcelle_restaurant/core/utils/app_text_styles.dart';
-import 'package:borcelle_restaurant/core/widgets/custom_button.dart';
-import 'package:borcelle_restaurant/core/widgets/custom_loading.dart';
-import 'package:borcelle_restaurant/feature/auth/presentation/view_model/auth_cubit.dart';
-import 'package:borcelle_restaurant/feature/auth/presentation/view_model/auth_states.dart';
+import 'package:yomnista/core/functions/email_validate.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
+import 'package:yomnista/core/utils/app_text_styles.dart';
+import 'package:yomnista/core/widgets/custom_button.dart';
+import 'package:yomnista/core/widgets/custom_loading.dart';
+import 'package:yomnista/feature/auth/presentation/view_model/auth_cubit.dart';
+import 'package:yomnista/feature/auth/presentation/view_model/auth_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
