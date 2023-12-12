@@ -392,40 +392,41 @@ class _ProfileViewState extends State<ProfileView> {
                       color: AppColors.color1,
                     ),
                     const Gap(10),
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 15),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: const Color(0xffFFE2BD),
-                          boxShadow: [
-                            BoxShadow(
-                                color: AppColors.black.withOpacity(.2),
-                                spreadRadius: 0,
-                                offset: const Offset(5, 2),
-                                blurRadius: 10)
-                          ]),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 5),
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Donation',
-                            style: getTitleStyle(
-                                color: AppColors.color1,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.attach_money_rounded,
-                                color: AppColors.color1,
-                              ))
-                        ],
+                    if (userData['role'] == 'Customer')
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 15),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: const Color(0xffFFE2BD),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: AppColors.black.withOpacity(.2),
+                                  spreadRadius: 0,
+                                  offset: const Offset(5, 2),
+                                  blurRadius: 10)
+                            ]),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 5),
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Donation',
+                              style: getTitleStyle(
+                                  color: AppColors.color1,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.attach_money_rounded,
+                                  color: AppColors.color1,
+                                ))
+                          ],
+                        ),
                       ),
-                    ),
                     const Gap(10),
                     Container(
                       margin: const EdgeInsets.only(bottom: 15),

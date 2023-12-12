@@ -20,7 +20,7 @@ class ManagerWalletView extends StatelessWidget {
           child: StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('order-list')
-                  .orderBy('time', descending: true)
+                  .orderBy('datetime', descending: true)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
@@ -96,6 +96,7 @@ class _OrderCartWidgetState extends State<OrderCartWidget> {
       if (element == 'total' ||
           element == 'customerId' ||
           element == 'time' ||
+          element == 'datetime' ||
           element == 'delivered' ||
           element == 'date') {
         return false;

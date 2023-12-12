@@ -360,7 +360,9 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
     FirebaseFirestore.instance.collection('menu-list').doc(foodId).set({
       'rate_sum': oldRate + rate,
       'rate_num': (rateNum == 0) ? (rateNum + 2) : (rateNum + 1),
-      'rate': (oldRate + rate) ~/ (rateNum + 1)
+      'rate': ((oldRate + rate) ~/ (rateNum + 1) >= 5)
+          ? 5
+          : (oldRate + rate) ~/ (rateNum + 1),
     }, SetOptions(merge: true));
   }
 

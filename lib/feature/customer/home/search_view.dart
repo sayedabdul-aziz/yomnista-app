@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:yomnista/core/utils/app_colors.dart';
+import 'package:yomnista/core/utils/app_text_styles.dart';
 import 'package:yomnista/core/widgets/custom_back_action.dart';
 import 'package:yomnista/core/widgets/menu_list_item.dart';
 
@@ -54,8 +56,31 @@ class _SearchView extends State<SearchView> {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
+              } else if (snapshot.data!.docs.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.search_off_rounded,
+                        size: 150,
+                        color: AppColors.color3,
+                      ),
+                      const Gap(20),
+                      Text(
+                        'No Items',
+                        textAlign: TextAlign.center,
+                        style: getbodyStyle(
+                          fontSize: 16,
+                          color: AppColors.color1,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return MenuListItems(data: snapshot.data!);
               }
-              return Expanded(child: MenuListItems(data: snapshot.data!));
             }),
       ),
     );
