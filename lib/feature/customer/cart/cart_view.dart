@@ -223,6 +223,7 @@ class _CustomerCartViewState extends State<CustomerCartView> {
       'customerId': customerId,
       'date': date,
       'time': time,
+      'delivered': true,
     }, SetOptions(merge: true));
     FirebaseFirestore.instance.collection('cart-list').doc(user?.uid).delete();
   }

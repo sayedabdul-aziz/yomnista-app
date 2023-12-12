@@ -1,15 +1,15 @@
 import 'dart:io';
 
-import 'package:yomnista/core/utils/app_colors.dart';
-import 'package:yomnista/core/utils/app_text_styles.dart';
-import 'package:yomnista/core/widgets/custom_button.dart';
-import 'package:yomnista/feature/auth/presentation/view/signin_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
+import 'package:yomnista/core/utils/app_text_styles.dart';
+import 'package:yomnista/core/widgets/custom_button.dart';
+import 'package:yomnista/feature/auth/presentation/view/signin_view.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -390,6 +390,41 @@ class _ProfileViewState extends State<ProfileView> {
                     const Gap(10),
                     Divider(
                       color: AppColors.color1,
+                    ),
+                    const Gap(10),
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 15),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: const Color(0xffFFE2BD),
+                          boxShadow: [
+                            BoxShadow(
+                                color: AppColors.black.withOpacity(.2),
+                                spreadRadius: 0,
+                                offset: const Offset(5, 2),
+                                blurRadius: 10)
+                          ]),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 5),
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Donation',
+                            style: getTitleStyle(
+                                color: AppColors.color1,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.attach_money_rounded,
+                                color: AppColors.color1,
+                              ))
+                        ],
+                      ),
                     ),
                     const Gap(10),
                     Container(

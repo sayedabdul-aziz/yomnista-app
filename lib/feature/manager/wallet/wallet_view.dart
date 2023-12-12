@@ -96,6 +96,7 @@ class _OrderCartWidgetState extends State<OrderCartWidget> {
       if (element == 'total' ||
           element == 'customerId' ||
           element == 'time' ||
+          element == 'delivered' ||
           element == 'date') {
         return false;
       }

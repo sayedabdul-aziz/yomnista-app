@@ -10,19 +10,19 @@ import 'package:yomnista/core/widgets/custom_back_action.dart';
 import 'package:yomnista/core/widgets/custom_button.dart';
 import 'package:yomnista/core/widgets/custom_error.dart';
 
-class CustomerFoodDetailsView extends StatefulWidget {
-  const CustomerFoodDetailsView({
+class CustomerOfferDetailsView extends StatefulWidget {
+  const CustomerOfferDetailsView({
     super.key,
     required this.id,
   });
   final String id;
 
   @override
-  State<CustomerFoodDetailsView> createState() =>
-      _CustomerFoodDetailsViewState();
+  State<CustomerOfferDetailsView> createState() =>
+      _CustomerOfferDetailsViewState();
 }
 
-class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
+class _CustomerOfferDetailsViewState extends State<CustomerOfferDetailsView> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _message = TextEditingController();
   User? user;
@@ -47,7 +47,7 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
       ),
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
-              .collection('menu-list')
+              .collection('offer-list')
               .doc(widget.id)
               .snapshots(),
           builder: (context, snapshot) {
@@ -79,24 +79,6 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
                               width: double.infinity,
                             ),
                           ),
-                          IconButton(
-                            onPressed: () {
-                              addToFav(
-                                  pName: itemData['name'],
-                                  pImage: itemData['image']);
-                              showErrorDialog(
-                                  context,
-                                  'Added To fovourite successfully',
-                                  AppColors.color2);
-                            },
-                            icon: CircleAvatar(
-                                radius: 18,
-                                backgroundColor: AppColors.white,
-                                child: Icon(
-                                  Icons.favorite_border_outlined,
-                                  color: AppColors.color2,
-                                )),
-                          )
                         ],
                       ),
                     ),
@@ -307,7 +289,6 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
                                     date: date,
                                     customeId: user!.uid);
                                 _message.text = '';
-
                                 showErrorDialog(
                                     context,
                                     'Your Review sent Successfully',
@@ -357,7 +338,7 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
   }
 
   updateFoodRate(String foodId, int rate, int rateNum, int oldRate) {
-    FirebaseFirestore.instance.collection('menu-list').doc(foodId).set({
+    FirebaseFirestore.instance.collection('offer-list').doc(foodId).set({
       'rate_sum': oldRate + rate,
       'rate_num': (rateNum == 0) ? (rateNum + 2) : (rateNum + 1),
       'rate': (oldRate + rate) ~/ (rateNum + 1)
@@ -377,18 +358,6 @@ class _CustomerFoodDetailsViewState extends State<CustomerFoodDetailsView> {
       'time': time,
       'date': date,
       'customeId': customeId,
-    }, SetOptions(merge: true));
-  }
-
-  addToFav({
-    required String pName,
-    required String pImage,
-  }) async {
-    FirebaseFirestore.instance.collection('favourite-list').doc(user?.uid).set({
-      pName: {
-        'name': pName,
-        'image': pImage,
-      },
     }, SetOptions(merge: true));
   }
 }

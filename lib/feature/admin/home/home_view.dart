@@ -101,6 +101,7 @@ class _OrderCartWidgetState extends State<OrderCartWidget> {
       if (element == 'total' ||
           element == 'customerId' ||
           element == 'time' ||
+          element == 'delivered' ||
           element == 'date') {
         return false;
       }
@@ -172,6 +173,7 @@ class _OrderCartWidgetState extends State<OrderCartWidget> {
                                 children: [
                                   Icon(
                                     Icons.done,
+                                    size: 18,
                                     color: AppColors.white,
                                   ),
                                   Text(
@@ -181,14 +183,30 @@ class _OrderCartWidgetState extends State<OrderCartWidget> {
                                     ),
                                   ),
                                   const Spacer(),
-                                  Icon(
-                                    Icons.done_all_rounded,
-                                    color: AppColors.white,
-                                  ),
-                                  Text(
-                                    'Delivered',
-                                    style: getbodyStyle(
-                                      color: AppColors.white,
+                                  InkWell(
+                                    onTap: () {
+                                      updateData();
+                                    },
+                                    child: Ink(
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.done_all_rounded,
+                                            size: 18,
+                                            color: widget.data['delivered']
+                                                ? AppColors.color1
+                                                : AppColors.white,
+                                          ),
+                                          Text(
+                                            'Delivered',
+                                            style: getbodyStyle(
+                                              color: widget.data['delivered']
+                                                  ? AppColors.color1
+                                                  : AppColors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -246,5 +264,14 @@ class _OrderCartWidgetState extends State<OrderCartWidget> {
         ),
       ),
     );
+  }
+
+  Future<void> updateData() async {
+    FirebaseFirestore.instance
+        .collection('order-list')
+        .doc(widget.data['customerId'] + widget.data['time'])
+        .set({
+      'delivered': true,
+    }, SetOptions(merge: true));
   }
 }

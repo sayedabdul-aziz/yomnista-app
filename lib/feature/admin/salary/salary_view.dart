@@ -106,6 +106,24 @@ class _AdminSalaryViewState extends State<AdminSalaryView> {
                           ),
                           const Gap(20),
                           CustomButton(
+                            onTap: () {
+                              // FirebaseFirestore.instance
+                              //     .collection('offer-list')
+                              //     .doc('Yomnista Combo')
+                              //     .set({
+                              //   'id': 'Yomnista Combo',
+                              //   'name': 'Yomnista Combo',
+                              //   'image': '',
+                              //   'description':
+                              //       'Buy Italian Pizza Get one free !',
+                              //   'price': 420,
+                              //   'is_offer': true,
+                              //   'offer_persent': 50,
+                              //   'rate': 4,
+                              //   'rate_num': 0,
+                              //   'rate_sum': 4,
+                              // }, SetOptions(merge: true));
+                            },
                             text: 'SHOW DETAILS',
                             color: AppColors.white,
                             style: getbodyStyle(

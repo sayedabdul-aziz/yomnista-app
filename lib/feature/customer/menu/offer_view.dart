@@ -36,16 +36,15 @@ class _CustomerOfferViewState extends State<CustomerOfferView> {
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('offers-list')
-                .snapshots(),
+            stream:
+                FirebaseFirestore.instance.collection('offer-list').snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
-              return MenuListItems(data: snapshot.data!);
+              return MenuListItems(data: snapshot.data!,isOffer:true);
             }),
       ),
     );

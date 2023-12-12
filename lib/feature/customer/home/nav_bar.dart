@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:yomnista/core/utils/app_colors.dart';
 import 'package:yomnista/feature/customer/cart/cart_view.dart';
 import 'package:yomnista/feature/customer/home/home_view.dart';
 import 'package:yomnista/feature/profile/profile_view.dart';
-import 'package:flutter/material.dart';
 
 class CustomerNavBarView extends StatefulWidget {
   const CustomerNavBarView({super.key});
@@ -20,6 +21,11 @@ class _CustomerNavBarViewState extends State<CustomerNavBarView> {
   int _selectedItem = 0;
   @override
   Widget build(BuildContext context) {
+    WidgetsFlutterBinding.ensureInitialized();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: AppColors.scaffoldBG,
+      statusBarIconBrightness: Brightness.dark,
+    ));
     return Scaffold(
       body: views[_selectedItem],
       bottomNavigationBar: Container(

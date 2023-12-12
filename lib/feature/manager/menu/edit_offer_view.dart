@@ -8,20 +8,19 @@ import 'package:yomnista/core/utils/app_text_styles.dart';
 import 'package:yomnista/core/widgets/custom_back_action.dart';
 import 'package:yomnista/core/widgets/custom_button.dart';
 
-class EditFoodDetailsView extends StatefulWidget {
-  const EditFoodDetailsView({
+class EditFoodOffersView extends StatefulWidget {
+  const EditFoodOffersView({
     super.key,
     required this.id,
   });
   final String id;
 
   @override
-  State<EditFoodDetailsView> createState() => _EditFoodDetailsViewState();
+  State<EditFoodOffersView> createState() => _EditFoodOffersViewState();
 }
 
-class _EditFoodDetailsViewState extends State<EditFoodDetailsView> {
+class _EditFoodOffersViewState extends State<EditFoodOffersView> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final _message = TextEditingController();
   User? user;
 
   Future<void> _getUser() async {
@@ -44,7 +43,7 @@ class _EditFoodDetailsViewState extends State<EditFoodDetailsView> {
       ),
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
-              .collection('menu-list')
+              .collection('offer-list')
               .doc(widget.id)
               .snapshots(),
           builder: (context, snapshot) {
@@ -270,11 +269,11 @@ class _EditFoodDetailsViewState extends State<EditFoodDetailsView> {
 
   Future<void> updateData(String key, value) async {
     if (key != 'offer_persent') {
-      FirebaseFirestore.instance.collection('menu-list').doc(widget.id).set({
+      FirebaseFirestore.instance.collection('offer-list').doc(widget.id).set({
         key: value,
       }, SetOptions(merge: true));
     } else {
-      FirebaseFirestore.instance.collection('menu-list').doc(widget.id).set({
+      FirebaseFirestore.instance.collection('offer-list').doc(widget.id).set({
         'is_offer': value == 0 ? false : true,
         'offer_persent': value,
       }, SetOptions(merge: true));

@@ -1,8 +1,8 @@
-import 'package:yomnista/core/widgets/custom_back_action.dart';
-import 'package:yomnista/core/widgets/menu_edit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:yomnista/core/widgets/custom_back_action.dart';
+import 'package:yomnista/core/widgets/menu_edit.dart';
 
 class ManagerOfferView extends StatefulWidget {
   const ManagerOfferView({super.key});
@@ -36,16 +36,18 @@ class _ManagerOfferViewState extends State<ManagerOfferView> {
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('offers-list')
-                .snapshots(),
+            stream:
+                FirebaseFirestore.instance.collection('offer-list').snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
-              return EditMenuItems(data: snapshot.data!);
+              return EditMenuItems(
+                data: snapshot.data!,
+                isOffer: true,
+              );
             }),
       ),
     );

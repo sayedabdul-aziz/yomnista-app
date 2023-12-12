@@ -1,16 +1,18 @@
-import 'package:yomnista/core/utils/app_colors.dart';
-import 'package:yomnista/core/utils/app_text_styles.dart';
-import 'package:yomnista/feature/customer/menu/details_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
+import 'package:yomnista/core/utils/app_text_styles.dart';
+import 'package:yomnista/feature/customer/home/offer_details.dart';
+import 'package:yomnista/feature/customer/menu/details_view.dart';
 
 class MenuListItems extends StatelessWidget {
   const MenuListItems({
     super.key,
     required this.data,
+    this.isOffer = false,
   });
-
+  final bool isOffer;
   final QuerySnapshot<Map<String, dynamic>> data;
 
   @override
@@ -27,7 +29,9 @@ class MenuListItems extends StatelessWidget {
             return GestureDetector(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => CustomerFoodDetailsView(id: item['id']),
+                  builder: (context) => isOffer
+                      ? CustomerOfferDetailsView(id: item['id'])
+                      : CustomerFoodDetailsView(id: item['id']),
                 ));
               },
               child: Container(

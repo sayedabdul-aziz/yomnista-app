@@ -1,16 +1,19 @@
-import 'package:yomnista/core/utils/app_colors.dart';
-import 'package:yomnista/core/utils/app_text_styles.dart';
-import 'package:yomnista/feature/manager/menu/edit_details_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:yomnista/core/utils/app_colors.dart';
+import 'package:yomnista/core/utils/app_text_styles.dart';
+import 'package:yomnista/feature/manager/menu/edit_details_view.dart';
+import 'package:yomnista/feature/manager/menu/edit_offer_view.dart';
 
 class EditMenuItems extends StatelessWidget {
   const EditMenuItems({
     super.key,
     required this.data,
+    this.isOffer = false,
   });
 
+  final bool isOffer;
   final QuerySnapshot<Map<String, dynamic>> data;
 
   @override
@@ -146,8 +149,9 @@ class EditMenuItems extends StatelessWidget {
                               child: InkWell(
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        EditFoodDetailsView(id: item['id']),
+                                    builder: (context) => isOffer
+                                        ? EditFoodOffersView(id: item['id'])
+                                        : EditFoodDetailsView(id: item['id']),
                                   ));
                                 },
                                 child: Ink(
